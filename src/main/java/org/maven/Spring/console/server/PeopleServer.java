@@ -13,8 +13,16 @@ public class PeopleServer {
 	
 	@Autowired
 	MapperPerson mapperPerson;
+
+    @Autowired
+    RedisService redisService;
 	
 	public List<Person> selectByPrimaryKey() {
+
+        redisService.set("test:key1", "Hello Redis Cluster");
+        String value = (String) redisService.get("test:key1");
+        System.out.println("Get value: " + value);
+
 		return mapperPerson.selectByPrimaryKey();
 	}
 }

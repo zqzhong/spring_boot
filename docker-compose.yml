@@ -1,67 +1,79 @@
 version: '3.8'
 services:
   redis-node-1:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: redis-node-1
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "7001:6379"
     volumes:
+      - ./redis-cluster.conf:/usr/local/etc/redis/redis.conf
       - redis-data-1:/data
     networks:
       - redis-net
 
   redis-node-2:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: redis-node-2
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "7002:6379"
     volumes:
+      - ./redis-cluster.conf:/usr/local/etc/redis/redis.conf
       - redis-data-2:/data
     networks:
       - redis-net
 
   redis-node-3:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: redis-node-3
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "7003:6379"
     volumes:
+      - ./redis-cluster.conf:/usr/local/etc/redis/redis.conf
       - redis-data-3:/data
     networks:
       - redis-net
 
   redis-node-4:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: redis-node-4
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "7004:6379"
     volumes:
+      - ./redis-cluster.conf:/usr/local/etc/redis/redis.conf
       - redis-data-4:/data
     networks:
       - redis-net
 
   redis-node-5:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: redis-node-5
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "7005:6379"
     volumes:
+      - ./redis-cluster.conf:/usr/local/etc/redis/redis.conf
       - redis-data-5:/data
     networks:
       - redis-net
 
   redis-node-6:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: redis-node-6
+    command: redis-server /usr/local/etc/redis/redis.conf
     ports:
       - "7006:6379"
     volumes:
+      - ./redis-cluster.conf:/usr/local/etc/redis/redis.conf
       - redis-data-6:/data
     networks:
       - redis-net
 
   cluster-setup:
-    image: custom-redis-cluster:latest
+    image: redis:7.2-alpine
     container_name: cluster-setup
     depends_on:
       - redis-node-1
@@ -74,6 +86,7 @@ services:
       - redis-net
     command: >
       sh -c "
+        echo 'Waiting for Redis nodes to start...' &&
         sleep 15 &&
         echo 'Creating Redis Cluster...' &&
         redis-cli --cluster create 
