@@ -38,7 +38,7 @@ public class WebControllerAop  {
 	@Autowired
     private PeopleServer peopleServer;
 	
-	@Pointcut("execution(* org.maven.Spring.console.conller..*.*(..))")
+//	@Pointcut("execution(* org.maven.Spring.console.conller..*.*(..))")
 	public void executeService()  {
 		 
 	}
@@ -46,7 +46,7 @@ public class WebControllerAop  {
 	/**
      *  01 . 前置通知：方法调用前被调用
      */
-    @Before("executeService()")
+//    @Before("executeService()")
     public void doBeforeAdvice(JoinPoint joinPoint){//  通过JoinPoint 获取通知的签名信息，如目标方法名，目标方法参数信息等
         System.out.println("我是前置通知");
         Object[] obj=joinPoint.getArgs();//获取目标方法的参数信息
@@ -100,13 +100,13 @@ public class WebControllerAop  {
      * @param joinPoint
      * @param keys
      */
-    @AfterReturning(value="execution(* org.maven.Spring.console.conller..*.*(..))",returning = "keys")
+//    @AfterReturning(value="execution(* org.maven.Spring.console.conller..*.*(..))",returning = "keys")
     public void doAfterReturningAdvice1(JoinPoint joinPoint,Object keys){
         System.out.println("后置通知执行了！！");
         System.out.println("第一个后置返回通知的返回值是 ："+keys);
     }
 
-    @AfterReturning(value="execution(* org.maven.Spring.console.conller..*.*(..))",returning = "keys",argNames="keys")
+//    @AfterReturning(value="execution(* org.maven.Spring.console.conller..*.*(..))",returning = "keys",argNames="keys")
     public void doAfterReturningAdvice2(String keys){ // 通知方法形影参数的类型是String
         System.out.println("第二个后置返回通知的返回值是 ："+keys);
     }
@@ -117,7 +117,7 @@ public class WebControllerAop  {
      *  throwing 限定了只有目标方法抛出的异常与通知方法相应参数异常类型时才能执行后置异常通知，否则不执行，
      *      对于throwing对应的通知方法参数为Throwable类型将匹配任何异常。
      */
-    @AfterThrowing(value="executeService()",throwing = "exception")
+//    @AfterThrowing(value="executeService()",throwing = "exception")
     public void doAfterThrowingAdvice(JoinPoint joinPoint,Throwable exception){
         // 目标方法名
         System.out.println(joinPoint.getSignature().getName());
@@ -131,7 +131,7 @@ public class WebControllerAop  {
      * 04 . 后置最终通知（目标方法只要执行完了就会执行后置通知方法）
      */
 
-    @After("executeService()")
+//    @After("executeService()")
     public void doAfterService(JoinPoint joinPoint){
         System.out.println("后置最终通知执行了！");
     }
@@ -141,7 +141,7 @@ public class WebControllerAop  {
      *   环绕通知非常强大，可以决定目标方法是否执行，什么时候执行，执行时是否需要替换方法参数，执行完毕是否需要替换返回值。
      *   环绕通知第一个参数必须是org.aspectj.lang.ProceedingJoinPoint类型
      */
-    @Around("execution(* org.maven.Spring.console.conller..*.testAround*(..))")
+//    @Around("execution(* org.maven.Spring.console.conller..*.testAround*(..))")
     public Object doAroundService(ProceedingJoinPoint proceedingJoinPoint){
         System.out.println("环绕通知的目标方法名为 ： "+proceedingJoinPoint.getSignature().getName());
         try {

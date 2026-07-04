@@ -1,10 +1,14 @@
 package org.maven.Spring.console.conller;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.maven.Spring.console.entity.Person;
 import org.maven.Spring.console.server.PeopleServer;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,10 +20,23 @@ public class TestControll {
 
 	@Autowired
     private PeopleServer peopleServer;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    @Autowired
+    private RedissonClient redissonClient;
 	
 	@ResponseBody
 	@RequestMapping(value= "/hello",method = RequestMethod.GET,produces="application/json;charset=utf-8")
 	public List<Person> hello() {
+
+        // 测试设置和获取
+        String key = "test:connection";
+        stringRedisTemplate.opsForValue().set(key, "Hello Redis!");
+        String value = stringRedisTemplate.opsForValue().get(key);
+        System.out.println("Redis 读取结果: " + value);
+
 		List<Person> person = peopleServer.selectByPrimaryKey();
 		return person;
 	}
@@ -103,6 +120,16 @@ public class TestControll {
 
         当访问 http://localhost:8080/aop/testAfter2.do?key=1122&value=sjshhjdh，不符合环绕通知的切入规则，所以环绕通知不会执行；
          */
+    }
+
+    @RequestMapping(value= "/deductStock",method = RequestMethod.GET,produces="application/json;charset=utf-8")
+    public void deductStock(String productId){
+        for(int i=0;i<100;i++){
+            new Thread(() -> {
+                peopleServer.deductStock(productId);
+            }).start();
+
+        }
     }
 
 }
